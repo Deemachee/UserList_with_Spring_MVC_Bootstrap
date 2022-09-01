@@ -9,6 +9,7 @@ import ru.kata.bootstrap.model.User;
 import ru.kata.bootstrap.service.RoleService;
 import ru.kata.bootstrap.service.UserService;
 import java.util.Arrays;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/admin")
@@ -35,7 +36,11 @@ public class AdminController {
     @PostMapping(value = "/add")
     public String addUser(@ModelAttribute User newUser,
                           @RequestParam(value = "checked", required = true) Long[] checked) {
-        Arrays.stream(checked).forEach(count -> newUser.setOneRole(roleService.getRoleByID(count)));
+        if (checked.length == 1 && roleService.getRoleByID(checked[0]).getRole().equals("ROLE_ADMIN")) {
+            newUser.setRoles(Set.of(roleService.getRoleByRole("ROLE_ADMIN"), roleService.getRoleByRole("ROLE_USER")));
+        } else {
+            Arrays.stream(checked).forEach(count -> newUser.setOneRole(roleService.getRoleByID(count)));
+        }
         userService.addUser(newUser);
         return "redirect:/admin";
     }
@@ -48,11 +53,12 @@ public class AdminController {
         }
         if (checked == null) {
             user.setRoles(userService.getUserById(user.getId()).getRoles());
-            userService.updateUser(user);
+        } else if (checked.length == 1 && roleService.getRoleByID(checked[0]).getRole().equals("ROLE_ADMIN")) {
+            user.setRoles(Set.of(roleService.getRoleByRole("ROLE_ADMIN"), roleService.getRoleByRole("ROLE_USER")));
         } else {
             Arrays.stream(checked).forEach(count -> user.setOneRole(roleService.getRoleByID(count)));
-            userService.updateUser(user);
         }
+        userService.updateUser(user);
         return "redirect:/admin";
     }
 
