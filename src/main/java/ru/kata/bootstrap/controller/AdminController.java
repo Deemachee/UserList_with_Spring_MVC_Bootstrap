@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.bootstrap.model.User;
 import ru.kata.bootstrap.service.RoleService;
 import ru.kata.bootstrap.service.UserService;
+
 import java.util.Arrays;
 import java.util.Set;
 
@@ -36,29 +37,14 @@ public class AdminController {
     @PostMapping(value = "/add")
     public String addUser(@ModelAttribute User newUser,
                           @RequestParam(value = "checked", required = true) Long[] checked) {
-        if (checked.length == 1 && roleService.getRoleByID(checked[0]).getRole().equals("ROLE_ADMIN")) {
-            newUser.setRoles(Set.of(roleService.getRoleByRole("ROLE_ADMIN"), roleService.getRoleByRole("ROLE_USER")));
-        } else {
-            Arrays.stream(checked).forEach(count -> newUser.setOneRole(roleService.getRoleByID(count)));
-        }
-        userService.addUser(newUser);
+        userService.saveUser(newUser, checked);
         return "redirect:/admin";
     }
 
     @PatchMapping(value = "/edit/{id}")
     public String updateUser(@ModelAttribute User user,
                              @RequestParam(value = "checked", required = false) Long[] checked) {
-        if (user.getPassword() == null) {
-            user.setPassword(userService.getUserById(user.getId()).getPassword());
-        }
-        if (checked == null) {
-            user.setRoles(userService.getUserById(user.getId()).getRoles());
-        } else if (checked.length == 1 && roleService.getRoleByID(checked[0]).getRole().equals("ROLE_ADMIN")) {
-            user.setRoles(Set.of(roleService.getRoleByRole("ROLE_ADMIN"), roleService.getRoleByRole("ROLE_USER")));
-        } else {
-            Arrays.stream(checked).forEach(count -> user.setOneRole(roleService.getRoleByID(count)));
-        }
-        userService.updateUser(user);
+        userService.updateUser(user, checked);
         return "redirect:/admin";
     }
 

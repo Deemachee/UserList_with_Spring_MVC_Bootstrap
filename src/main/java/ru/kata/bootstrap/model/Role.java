@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -28,7 +29,7 @@ public class Role implements GrantedAuthority {
 
     @Override
     public String toString() {
-        return role.replaceAll("ROLE_", "") +"; ";
+        return role.replaceAll("ROLE_", "") + "; ";
     }
 
     @Override
