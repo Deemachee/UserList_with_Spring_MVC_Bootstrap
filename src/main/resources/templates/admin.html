@@ -132,7 +132,7 @@
                                                                         for="ePassword">Password: </label></strong>
                                                                 <br/>
                                                                 <input type="password" class="form-control"
-                                                                       th:value="null" id="ePassword" name="password">
+                                                                       th:value="edit" id="ePassword" name="password">
                                                                 <br/>
 
                                                                 <strong><label
@@ -159,8 +159,8 @@
                                                                        th:value="${user.getAge()}" id="eAge" name="age">
                                                                 <br/>
 
-                                                                <select multiple class="form-control w-100"
-                                                                        id="editRoles" name="checked">
+                                                                <label for="editRoles"></label><select multiple class="form-control w-100"
+                                                                                                       id="editRoles" name="checked">
                                                                     <option
                                                                             th:each="role : ${roleList}"
                                                                             th:value="${role.getId()}"

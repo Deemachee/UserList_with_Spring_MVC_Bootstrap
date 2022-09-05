@@ -102,7 +102,7 @@ public class User implements UserDetails {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "User{Id= " + id + '\'' +
                 "username='" + username + '\'' +
                 ", name='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +

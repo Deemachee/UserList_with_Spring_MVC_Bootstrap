@@ -11,6 +11,7 @@ import ru.kata.bootstrap.dao.UserDao;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -75,9 +76,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUser(User user, Long[] checked) {
-        if (user.getPassword() == null) {
-            user.setPassword(getUserById(user.getId()).getPassword());
-        }
         if (checked == null) {
             user.setRoles(getUserById(user.getId()).getRoles());
         } else if (checked.length == 1 && roleService.getRoleByID(checked[0]).getRole().equals("ROLE_ADMIN")) {
@@ -85,16 +83,10 @@ public class UserServiceImpl implements UserService {
         } else {
             Arrays.stream(checked).forEach(count -> user.setOneRole(roleService.getRoleByID(count)));
         }
-        String passwordFromForm = user.getPassword();
-        String encodedPasswordFromBase = getUserById(user.getId()).getPassword();
-        if (getUserById(user.getId()).getPassword().equals(user.getPassword())) {
-            user.setPassword(encodedPasswordFromBase);
+        if (Objects.equals(user.getPassword(), "edit")) {
+            user.setPassword(getUserById(user.getId()).getPassword());
         } else {
-            if (passwordEncoder.matches(passwordFromForm, encodedPasswordFromBase)) {
-                user.setPassword(encodedPasswordFromBase);
-            } else {
-                user.setPassword(passwordEncoder.encode(passwordFromForm));
-            }
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         userDao.save(user);
     }
