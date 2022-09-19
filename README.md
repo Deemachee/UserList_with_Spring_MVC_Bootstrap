@@ -1,5 +1,3 @@
-# PP_3_1_3
-
 При первом запуске создаются 2 юзера:
 
 login: "admin@gmail.com", password: "admin" (роли: ROLE_USER, ROLE_ADMIN)
